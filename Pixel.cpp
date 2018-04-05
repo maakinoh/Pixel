@@ -1,5 +1,6 @@
 #include <Pixel.h>
 #include <Adafruit_NeoPixel.h>
+#include <Animation.h>
 
 
 Adafruit_NeoPixel strip;

@@ -8,7 +8,6 @@ public:
     Pixel(int pin, int pixelCount);
     void setAnimation();
     void update();
-    enum Animation{CIRCLEDOWN, CIRCLEUP};
 
 };
 
