@@ -1,4 +1,4 @@
-#include <Pixel.h>
+#include "Pixel.h"
 #include <Adafruit_NeoPixel.h>
 
 
@@ -8,12 +8,13 @@ int wait = 50;
 int animationMode;
 int pixels;
 
-uint32_t getNextColor();
+//uint32_t getNextColor();
 //void circle();
 void on(int pixel, uint32_t color);
 void off(int pixel);
 void show();
-uint32_t getColor(Pixel::Colors color);
+
+
 
 int red = 255;
 int green = 0;
@@ -28,6 +29,7 @@ int blue = 0;
  * 5 = Magentas
  */
 int fadeTo;
+
 uint32_t clear = strip.Color(0,0,0);
 
 Pixel::Pixel(){
@@ -39,6 +41,11 @@ void Pixel::start(){
     strip.begin();
     strip.setBrightness(20);
     strip.show();
+}
+
+
+void Pixel::setColor(Pixel::Colors){
+
 }
 
 Pixel::Pixel(int pin,int pixelCount) {
@@ -94,7 +101,7 @@ void Pixel::show(){
 }
 
 
-uint32_t getNextColor(){
+uint32_t Pixel::getNextColor(){
   switch(fadeTo){
     //Fading to Yellow
     case 0:
