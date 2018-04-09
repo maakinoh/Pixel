@@ -14,6 +14,7 @@ public:
     void show();
     void start();
     void setColor(Color::Colors color);
+    void setClearingAfterAnimation(bool value);
 private:
     //uint32_t getNextColor();
     Adafruit_NeoPixel strip;

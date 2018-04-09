@@ -13,8 +13,6 @@ bool clearingAfterAnimation = true;
 
 bool clearing;
 
-
-
 //uint32_t getNextColor();
 //void circle();
 void on(int pixel, uint32_t color);
@@ -96,7 +94,6 @@ void Pixel::halfCircleCloseUp(){
             }
         }
     }
-
     if (clearing) {
         off(animationCount-1);
         off(pixels-animationCount-1);
@@ -104,7 +101,6 @@ void Pixel::halfCircleCloseUp(){
         on(animationCount-1,getNextColor());
         on(pixels-animationCount-1,getNextColor());
     }
-
     delay(wait);
     show();
     animationCount++;
@@ -120,7 +116,6 @@ void Pixel::halfCircleCloseDown(){
             } else {
                 clearing = false;
             }
-
         }
     }
     if (clearing) {
@@ -133,7 +128,6 @@ void Pixel::halfCircleCloseDown(){
     show();
     delay(wait);
     animationCount++;
-
 }
 
 void Pixel::circle(){
@@ -169,6 +163,9 @@ void Pixel::show(){
 
 
 uint32_t Pixel::getNextColor(){
+    if (activeColor != Color::Colors::RAINBOW) {
+        return Color::getColor(strip, activeColor);
+    }
   switch(fadeTo){
     //Fading to Yellow
     case 0:
