@@ -1,4 +1,5 @@
 #include "Pixel.h"
+#include "utils/Colors.hpp"
 #include <Adafruit_NeoPixel.h>
 
 
@@ -7,6 +8,12 @@ int animationCount = 0;
 int wait = 50;
 int animationMode;
 int pixels;
+
+bool clearingAfterAnimation = true;
+
+bool clearing;
+
+
 
 //uint32_t getNextColor();
 //void circle();
@@ -32,19 +39,9 @@ int fadeTo;
 
 uint32_t clear = strip.Color(0,0,0);
 
+Color::Colors activeColor = Color::Colors::RAINBOW;
+
 Pixel::Pixel(){
-
-}
-
-
-void Pixel::start(){
-    strip.begin();
-    strip.setBrightness(20);
-    strip.show();
-}
-
-
-void Pixel::setColor(Pixel::Colors){
 
 }
 
@@ -53,21 +50,89 @@ Pixel::Pixel(int pin,int pixelCount) {
     pixels = pixelCount;
 }
 
+void Pixel::start(){
+    strip.begin();
+    strip.setBrightness(20);
+    strip.show();
+}
+
+void Pixel::setClearingAfterAnimation(bool value){
+    clearingAfterAnimation = value;
+}
 
 
-
+void Pixel::setColor(Color::Colors color){
+    activeColor = color;
+}
 
 void Pixel::setAnimation(int animationCode){
     animationMode = animationCode;
+    animationCount = 0;
 }
 
 
 void Pixel::update(){
-  switch(animationMode){
+    switch (animationMode) {
     case 1:
         circle();
-      break;
-  }
+        break;
+    case 2:
+        halfCircleCloseDown();
+        break;
+    case 3:
+        halfCircleCloseUp();
+        break;
+    }
+}
+
+void Pixel::halfCircleCloseUp(){
+    if (animationCount>=(pixels/2)) {
+        animationCount = 0;
+        if (clearingAfterAnimation) {
+            if (!clearing) {
+                clearing = true;
+            } else {
+                clearing = false;
+            }
+        }
+    }
+
+    if (clearing) {
+        off(animationCount-1);
+        off(pixels-animationCount-1);
+    } else {
+        on(animationCount-1,getNextColor());
+        on(pixels-animationCount-1,getNextColor());
+    }
+
+    delay(wait);
+    show();
+    animationCount++;
+}
+
+
+void Pixel::halfCircleCloseDown(){
+    if (animationCount>=(pixels/2)) {
+        animationCount = 0;
+        if (clearingAfterAnimation) {
+            if (!clearing) {
+                clearing = true;
+            } else {
+                clearing = false;
+            }
+
+        }
+    }
+    if (clearing) {
+        off(animationCount);
+        off(pixels-animationCount);
+    } else {
+        on(animationCount,getNextColor());
+        on(pixels-animationCount,getNextColor());
+    }
+    show();
+    delay(wait);
+    animationCount++;
 
 }
 
@@ -77,10 +142,12 @@ void Pixel::circle(){
     on(animationCount+2,getNextColor());
     show();
     delay(wait);
-    off(animationCount);
-    off(animationCount+1);
-    off(animationCount+2);
-    show();
+    if (clearingAfterAnimation) {
+        off(animationCount);
+        off(animationCount+1);
+        off(animationCount+2);
+        show();
+    }
     animationCount++;
     if (animationCount>=pixels){
         animationCount = 0;
@@ -89,7 +156,7 @@ void Pixel::circle(){
 
 
 void Pixel::on(int pixel, uint32_t color){
-  strip.setPixelColor(pixel,color);
+    strip.setPixelColor(pixel,color);
 }
 
 void Pixel::off(int pixel){
@@ -113,7 +180,6 @@ uint32_t Pixel::getNextColor(){
       return strip.Color(red, green, blue);
     }
     break;
-
     //Fading to Green
     case 1:
     if (red>0) {

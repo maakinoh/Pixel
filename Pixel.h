@@ -1,6 +1,7 @@
 #ifndef Pixel_h
 #define Pixel_h
 #include <Adafruit_NeoPixel.h>
+#include "utils/Colors.hpp"
 // the #include statment and code go here...
 
 class Pixel{
@@ -12,12 +13,13 @@ public:
     void update();
     void show();
     void start();
-    enum Colors {RED,BLUE,GREEN,YELLOW,ORANGE,CYAN,MAGENTA,RAINBOW};
-    void setColor(Colors color);
+    void setColor(Color::Colors color);
 private:
     //uint32_t getNextColor();
     Adafruit_NeoPixel strip;
     void circle();
+    void halfCircleCloseDown();
+    void halfCircleCloseUp();
     void on(int pixel, uint32_t color);
     void off(int pixel);
     uint32_t getNextColor();
