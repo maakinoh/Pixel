@@ -4,7 +4,9 @@
 #include "utils/Colors.hpp"
 // the #include statment and code go here...
 
-class Pixel{
+namespace pixel{
+class Pixel
+{
 
 public:
     Pixel(int pin, int pixelCount);
@@ -24,6 +26,9 @@ private:
     void on(int pixel, uint32_t color);
     void off(int pixel);
     uint32_t getNextColor();
+
 };
+}
+
 
 #endif
