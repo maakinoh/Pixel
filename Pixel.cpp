@@ -35,7 +35,7 @@ int blue = 0;
  */
 int fadeTo;
 
-uint32_t clear = strip.Color(0,0,0);
+uint32_t clear = strip.Color(0,0,0,0);
 
 Color::Colors activeColor = Color::Colors::RAINBOW;
 
@@ -44,11 +44,12 @@ Pixel::Pixel(){
 }
 
 Pixel::Pixel(int pin,int pixelCount) {
-    strip = Adafruit_NeoPixel(pixelCount, pin, NEO_GRB + NEO_KHZ800);
+    strip = Adafruit_NeoPixel(pixelCount, pin, NEO_GRBW + NEO_KHZ800);
     pixels = pixelCount;
 }
 
 void Pixel::start(){
+
     strip.begin();
     strip.setBrightness(20);
     strip.show();
@@ -68,7 +69,9 @@ void Pixel::setAnimation(int animationCode){
     animationCount = 0;
 }
 
-
+void Pixel::setTimeOut(int value){
+    wait = value;
+}
 void Pixel::update(){
     switch (animationMode) {
     case 1:
@@ -108,7 +111,7 @@ void Pixel::halfCircleCloseUp(){
 
 
 void Pixel::halfCircleCloseDown(){
-    if (animationCount>=(pixels/2)) {
+    if (animationCount>(pixels/2)) {
         animationCount = 0;
         if (clearingAfterAnimation) {
             if (!clearing) {
@@ -171,60 +174,60 @@ uint32_t Pixel::getNextColor(){
     case 0:
     if (green<255) {
       green++;
-      return strip.Color(red, green, blue);
+      return strip.Color(red, green, blue,0);
     } else {
       fadeTo = 1;
-      return strip.Color(red, green, blue);
+      return strip.Color(red, green, blue,0);
     }
     break;
     //Fading to Green
     case 1:
     if (red>0) {
       red--;
-      return strip.Color(red, green, blue);
+      return strip.Color(red, green, blue,0);
     } else{
       fadeTo = 2;
-      return strip.Color(red, green, blue);
+      return strip.Color(red, green, blue,0);
     }
     break;
     //Fading To Cyan
     case 2:
     if (blue<255) {
       blue++;
-      return strip.Color(red, green, blue);
+      return strip.Color(red, green, blue,0);
     } else {
       fadeTo = 3;
-      return strip.Color(red, green, blue);
+      return strip.Color(red, green, blue,0);
     }
     break;
     //Fade to Blue
     case 3:
     if (green>0) {
       green--;
-      return strip.Color(red, green, blue);
+      return strip.Color(red, green, blue,0);
     } else {
       fadeTo = 4;
-      return strip.Color(red, green, blue);
+      return strip.Color(red, green, blue,0);
     }
     break;
     //Fade To Magenta
     case 4:
     if (red<255) {
       red++;
-      return strip.Color(red, green, blue);
+      return strip.Color(red, green, blue,0);
     } else {
       fadeTo = 5;
-      return strip.Color(red, green, blue);
+      return strip.Color(red, green, blue,0);
     }
     break;
     //Fade Back to Red
     case 5:
     if (blue>0) {
       blue--;
-      return strip.Color(red, green, blue);
+      return strip.Color(red, green, blue,0);
     } else {
       fadeTo = 0;
-      return strip.Color(red, green, blue);
+      return strip.Color(red, green, blue,0);
     }
     break;
   }

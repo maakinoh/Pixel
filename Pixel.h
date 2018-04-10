@@ -4,7 +4,7 @@
 #include "utils/Colors.hpp"
 // the #include statment and code go here...
 
-namespace pixel{
+
 class Pixel
 {
 
@@ -28,7 +28,4 @@ private:
     uint32_t getNextColor();
 
 };
-}
-
-
 #endif
