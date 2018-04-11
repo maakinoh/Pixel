@@ -5,7 +5,7 @@
 
 Adafruit_NeoPixel strip;
 int animationCount = 0;
-int wait = 50;
+int wait = 40;
 int animationMode;
 int pixels;
 
@@ -134,6 +134,9 @@ void Pixel::halfCircleCloseDown(){
 }
 
 void Pixel::circle(){
+    if (animationCount>(pixels-2)){
+        animationCount = 0;
+    }
     on(animationCount,getNextColor());
     on(animationCount+1,getNextColor());
     on(animationCount+2,getNextColor());
@@ -146,9 +149,6 @@ void Pixel::circle(){
         show();
     }
     animationCount++;
-    if (animationCount>=pixels){
-        animationCount = 0;
-    }
 }
 
 
