@@ -1,7 +1,11 @@
-#ifndef Colors_h
-#define Colors_h
-class Color{
+#ifndef Color_h
+#define Color_h
+
+class Color {
 public:
+    Color();
+    ~Color();
+
     enum Colors {
         RED,
         BLUE,
@@ -11,8 +15,8 @@ public:
         CYAN,
         MAGENTA,
         RAINBOW};
-    static uint32_t getColor(Adafruit_NeoPixel strip, Colors color);
 
+    static uint32_t getColor(Adafruit_NeoPixel strip, Colors color);
 };
 
 #endif

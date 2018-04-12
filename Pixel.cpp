@@ -1,9 +1,9 @@
 #include "Pixel.h"
-#include "utils/Colors.hpp"
+#include "utils/Color.hpp"
 #include <Adafruit_NeoPixel.h>
 
-
 Adafruit_NeoPixel strip;
+
 int animationCount = 0;
 int wait = 40;
 int animationMode;
@@ -38,10 +38,11 @@ uint32_t clear = strip.Color(0,0,0,0);
 Color::Colors activeColor = Color::Colors::RAINBOW;
 
 Pixel::Pixel(){
-
+    //color* = new Color;
 }
 
 Pixel::Pixel(int pin,int pixelCount) {
+    //color* = new Color;
     strip = Adafruit_NeoPixel(pixelCount, pin, NEO_GRBW + NEO_KHZ800);
     pixels = pixelCount;
 }
@@ -64,11 +65,7 @@ void Pixel::setColor(Color::Colors color){
 
 void Pixel::setAnimation(int animationCode){
     animationMode = animationCode;
-    if (animationCode == 3) {
-        animationCount = 0;
-    } else{
-        animationCount = 0;
-    }
+    animationCount = 0;
 }
 
 void Pixel::setTimeOut(int value){
@@ -85,8 +82,60 @@ void Pixel::update(){
     case 3:
         halfCircleCloseUp();
         break;
+    case 4:
+        halfCircleSpinRight();
+        break;
+    case 5:
+        halfCircleSpinLeft();
+        break;
     }
 }
+void Pixel::halfCircleSpinLeft(){
+    if (animationCount>(pixels/2)) {
+        animationCount = 0;
+        if(clearingAfterAnimation){
+            if (!clearing) {
+                clearing = true;
+            } else {
+                clearing = false;
+            }
+        }
+    }
+    if (clearing) {
+        off((pixels/2)-animationCount);
+        off(animationCount);
+    } else {
+        on((pixels/2)-animationCount,getNextColor());
+        on(animationCount,getNextColor());
+    }
+    show();
+    delay(wait);
+    animationCount++;
+}
+
+void Pixel::halfCircleSpinRight(){
+    if (animationCount>(pixels/2)) {
+        animationCount = 0;
+        if(clearingAfterAnimation){
+            if (!clearing) {
+                clearing = true;
+            } else {
+                clearing = false;
+            }
+        }
+    }
+    if (clearing) {
+        off(animationCount);
+        off((pixels/2)+animationCount);
+    } else {
+        on(animationCount,getNextColor());
+        on((pixels/2)+animationCount,getNextColor());
+    }
+    show();
+    delay(wait);
+    animationCount++;
+}
+
 
 void Pixel::halfCircleCloseUp(){
     if (animationCount>(pixels/2)) {
