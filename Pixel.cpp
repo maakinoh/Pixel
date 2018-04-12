@@ -13,8 +13,6 @@ bool clearingAfterAnimation = true;
 
 bool clearing;
 
-//uint32_t getNextColor();
-//void circle();
 void on(int pixel, uint32_t color);
 void off(int pixel);
 void show();
@@ -66,7 +64,11 @@ void Pixel::setColor(Color::Colors color){
 
 void Pixel::setAnimation(int animationCode){
     animationMode = animationCode;
-    animationCount = 0;
+    if (animationCode == 3) {
+        animationCount = 0;
+    } else{
+        animationCount = 0;
+    }
 }
 
 void Pixel::setTimeOut(int value){
@@ -87,7 +89,7 @@ void Pixel::update(){
 }
 
 void Pixel::halfCircleCloseUp(){
-    if (animationCount>=(pixels/2)) {
+    if (animationCount>(pixels/2)) {
         animationCount = 0;
         if (clearingAfterAnimation) {
             if (!clearing) {
@@ -98,16 +100,17 @@ void Pixel::halfCircleCloseUp(){
         }
     }
     if (clearing) {
-        off(animationCount-1);
-        off(pixels-animationCount-1);
+        off((pixels/2)-animationCount);
+        off((pixels/2)+animationCount);
     } else {
-        on(animationCount-1,getNextColor());
-        on(pixels-animationCount-1,getNextColor());
+        on((pixels/2)-animationCount,getNextColor());
+        on((pixels/2)+animationCount,getNextColor());
     }
     delay(wait);
     show();
     animationCount++;
 }
+
 
 
 void Pixel::halfCircleCloseDown(){
