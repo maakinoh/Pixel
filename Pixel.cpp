@@ -2,6 +2,10 @@
 #include "utils/Color.hpp"
 #include <Adafruit_NeoPixel.h>
 
+using namespace pixelcolor;
+
+Color col;
+
 Adafruit_NeoPixel strip;
 
 int animationCount = 0;
@@ -12,6 +16,8 @@ int pixels;
 bool clearingAfterAnimation = true;
 
 bool clearing;
+
+
 
 void on(int pixel, uint32_t color);
 void off(int pixel);
@@ -48,7 +54,7 @@ Pixel::Pixel(int pin,int pixelCount) {
 }
 
 void Pixel::start(){
-
+    col = Color();
     strip.begin();
     strip.setBrightness(20);
     strip.show();
@@ -218,69 +224,5 @@ void Pixel::show(){
 
 
 uint32_t Pixel::getNextColor(){
-    if (activeColor != Color::Colors::RAINBOW) {
-        return Color::getColor(strip, activeColor);
-    }
-  switch(fadeTo){
-    //Fading to Yellow
-    case 0:
-    if (green<255) {
-      green++;
-      return strip.Color(red, green, blue,0);
-    } else {
-      fadeTo = 1;
-      return strip.Color(red, green, blue,0);
-    }
-    break;
-    //Fading to Green
-    case 1:
-    if (red>0) {
-      red--;
-      return strip.Color(red, green, blue,0);
-    } else{
-      fadeTo = 2;
-      return strip.Color(red, green, blue,0);
-    }
-    break;
-    //Fading To Cyan
-    case 2:
-    if (blue<255) {
-      blue++;
-      return strip.Color(red, green, blue,0);
-    } else {
-      fadeTo = 3;
-      return strip.Color(red, green, blue,0);
-    }
-    break;
-    //Fade to Blue
-    case 3:
-    if (green>0) {
-      green--;
-      return strip.Color(red, green, blue,0);
-    } else {
-      fadeTo = 4;
-      return strip.Color(red, green, blue,0);
-    }
-    break;
-    //Fade To Magenta
-    case 4:
-    if (red<255) {
-      red++;
-      return strip.Color(red, green, blue,0);
-    } else {
-      fadeTo = 5;
-      return strip.Color(red, green, blue,0);
-    }
-    break;
-    //Fade Back to Red
-    case 5:
-    if (blue>0) {
-      blue--;
-      return strip.Color(red, green, blue,0);
-    } else {
-      fadeTo = 0;
-      return strip.Color(red, green, blue,0);
-    }
-    break;
-  }
+    col.getNextColor();
 }

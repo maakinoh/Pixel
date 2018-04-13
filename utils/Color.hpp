@@ -1,6 +1,8 @@
 #ifndef Color_h
 #define Color_h
 
+namespace pixelcolor{
+
 class Color {
 public:
     Color();
@@ -17,6 +19,8 @@ public:
         RAINBOW};
 
     static uint32_t getColor(Adafruit_NeoPixel strip, Colors color);
+    uint32_t getNextColor();
 };
+}
 
 #endif
