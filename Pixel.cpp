@@ -1,9 +1,12 @@
 #include "Pixel.h"
 #include "utils/Color.hpp"
+#include "utils/animation/Animation.hpp"
 #include <Adafruit_NeoPixel.h>
 
+using namespace animat;
 using namespace pixelcolor;
 
+Animation anim;
 Color col;
 
 Adafruit_NeoPixel strip;
@@ -50,11 +53,12 @@ Pixel::Pixel(){
 Pixel::Pixel(int pin,int pixelCount) {
     //color* = new Color;
     strip = Adafruit_NeoPixel(pixelCount, pin, NEO_GRBW + NEO_KHZ800);
+    col = Color();
+    anim = CircleAnimation();
     pixels = pixelCount;
 }
 
 void Pixel::start(){
-    col = Color();
     strip.begin();
     strip.setBrightness(20);
     strip.show();
@@ -192,20 +196,7 @@ void Pixel::halfCircleCloseDown(){
 }
 
 void Pixel::circle(){
-    if (animationCount>(pixels-2)){
-        animationCount = 0;
-    }
-    on(animationCount,getNextColor());
-    on(animationCount+1,getNextColor());
-    on(animationCount+2,getNextColor());
-    show();
-    delay(wait);
-    if (clearingAfterAnimation) {
-        off(animationCount);
-        off(animationCount+1);
-        off(animationCount+2);
-        show();
-    }
+    anim.animate(strip,animationCount,col);
     animationCount++;
 }
 
@@ -224,5 +215,5 @@ void Pixel::show(){
 
 
 uint32_t Pixel::getNextColor(){
-    col.getNextColor();
+    //col.getNextColor();
 }

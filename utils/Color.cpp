@@ -1,9 +1,9 @@
 #include "utils/Color.hpp"
 #include <Adafruit_NeoPixel.h>
 
-Color::Colors activeColor = Color::Colors::RAINBOW;
 using namespace pixelcolor;
 
+Color::Colors activeColor = Color::Colors::RAINBOW;
 Color::Color(){
 
 }

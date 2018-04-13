@@ -2,14 +2,12 @@
 #define Pixel_h
 #include <Adafruit_NeoPixel.h>
 #include "utils/Color.hpp"
-// the #include statment and code go here...
+#include "utils/animation/Animation.hpp"
 
 
 class Pixel
 {
-
 public:
-
     Pixel(int pin, int pixelCount);
     Pixel();
 
@@ -17,12 +15,13 @@ public:
     void update();
     void show();
     void start();
-    void setColor(Color::Colors color);
+    void setColor(pixelcolor::Color::Colors color);
     void setClearingAfterAnimation(bool value);
     void setTimeOut(int value);
 private:
     //uint32_t getNextColor();
     Adafruit_NeoPixel strip;
+    animat::Animation anim;
     void circle();
     void halfCircleCloseDown();
     void halfCircleCloseUp();
