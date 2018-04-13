@@ -1,21 +1,19 @@
-#include "utils/Color.hpp"
+#include "utils/Color.h"
+#include "utils/Colors.h"
 #include <Adafruit_NeoPixel.h>
 
 using namespace pixelcolor;
 
 Color::Colors activeColor = Color::Colors::RAINBOW;
-Color::Color(){
-
-}
-
-Color::~Color(){
-
-
-}
 
 int red = 255;
 int green = 0;
 int blue = 0;
+
+Color::Color(){
+
+
+}
 
 uint32_t Color::getColor(Adafruit_NeoPixel strip, Color::Colors color){
     switch (color)

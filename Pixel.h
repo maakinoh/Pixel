@@ -1,8 +1,9 @@
 #ifndef Pixel_h
 #define Pixel_h
 #include <Adafruit_NeoPixel.h>
-#include "utils/Color.hpp"
-#include "utils/animation/Animation.hpp"
+#include "utils/Color.h"
+#include "utils/Colors.h"
+#include "utils/animation/Animation.h"
 
 
 class Pixel
@@ -15,7 +16,7 @@ public:
     void update();
     void show();
     void start();
-    void setColor(pixelcolor::Color::Colors color);
+    void setColor(colors::Colors color);
     void setClearingAfterAnimation(bool value);
     void setTimeOut(int value);
 private:

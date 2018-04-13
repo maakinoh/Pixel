@@ -1,10 +1,12 @@
 #include "Pixel.h"
-#include "utils/Color.hpp"
-#include "utils/animation/Animation.hpp"
+#include "utils/Color.h"
+#include "utils/Colors.h"
+#include "utils/animation/Animation.h"
 #include <Adafruit_NeoPixel.h>
 
 using namespace animat;
 using namespace pixelcolor;
+using namespace colors;
 
 Animation anim;
 Color col;
@@ -44,7 +46,7 @@ int fadeTo;
 
 uint32_t clear = strip.Color(0,0,0,0);
 
-Color::Colors activeColor = Color::Colors::RAINBOW;
+Colors activeColor = Colors::RAINBOW;
 
 Pixel::Pixel(){
     //color* = new Color;
@@ -53,8 +55,6 @@ Pixel::Pixel(){
 Pixel::Pixel(int pin,int pixelCount) {
     //color* = new Color;
     strip = Adafruit_NeoPixel(pixelCount, pin, NEO_GRBW + NEO_KHZ800);
-    col = Color();
-    anim = CircleAnimation();
     pixels = pixelCount;
 }
 
@@ -69,7 +69,7 @@ void Pixel::setClearingAfterAnimation(bool value){
 }
 
 
-void Pixel::setColor(Color::Colors color){
+void Pixel::setColor(Colors color){
     activeColor = color;
 }
 
@@ -215,5 +215,5 @@ void Pixel::show(){
 
 
 uint32_t Pixel::getNextColor(){
-    //col.getNextColor();
+    col.getNextColor();
 }

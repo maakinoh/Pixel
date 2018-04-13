@@ -1,6 +1,6 @@
 #include <Adafruit_NeoPixel.h>
 #include "utils/Color.hpp"
-#include "utils/animation/Animation.hpp"
+#include "utils/animation/Animation.h"
 
 
 using namespace animat;
