@@ -1,9 +1,5 @@
 #include "PixelRing.h"
 
-#include <Adafruit_NeoPixel.h>
-
-#include <Arduino.h>
-
 Adafruit_NeoPixel strip;
 
 int pixels;
@@ -18,7 +14,7 @@ int red = 255;
 int green = 0;
 int blue = 0;
 
-int fadeTo = 0;
+int colorState = 0;
 
 PixelRing::PixelRing()
 {
@@ -40,15 +36,18 @@ void PixelRing::start()
 
 void PixelRing::circle()
 {
-    strip.setPixelColor(animationCount % pixels, getNextRainbowColor());
-    strip.setPixelColor((animationCount - 1) % pixels, getActualColorFaded(0.93));
-    strip.setPixelColor((animationCount - 2) % pixels, getActualColorFaded(0.95));
+
+    uint32_t col = getNextRainbowColor();
+
+    strip.setPixelColor(animationCount % pixels, col);
+    strip.setPixelColor((animationCount - 1) % pixels, getColorFaded(col, 0.8));
+    strip.setPixelColor((animationCount - 2) % pixels, getColorFaded(col, 0.8));
     strip.show();
-    delay(100);
+    delay(200);
     strip.setPixelColor(animationCount % pixels, strip.Color(0, 0, 0, 0));
     strip.setPixelColor((animationCount - 1) % pixels, strip.Color(0, 0, 0, 0));
     strip.setPixelColor((animationCount - 2) % pixels, strip.Color(0, 0, 0, 0));
-    strip.show();
+
     animationCount++;
 
     if (animationCount >= pixels)
@@ -69,106 +68,65 @@ void getNextColor()
     }
 }
 
+uint8_t PixelRing::getBlue(uint32_t col)
+{
+    return (uint8_t)(col);
+}
+
+uint8_t PixelRing::getGreen(uint32_t col)
+{
+    return (uint8_t)(col >> 8);
+}
+
+// Calculate the red value of the passed color.
+//
+// Parameter:
+//      col as uint32_t  The colorvalue to calculate the red value.
+uint8_t PixelRing::getRed(uint32_t col)
+{
+    return (uint8_t)(col >> 16);
+}
+
 // This function returns the actual color with a fading effect
 // The effect intensity is controlled by the passed fadeLevel as an int.
-uint32_t PixelRing::getActualColorFaded(float fadeLevel)
+uint32_t PixelRing::getColorFaded(uint32_t color, float fadeLevel)
 {
+    uint8_t fadedRed, fadedGreen, fadedBlue;
 
-    int fadedRed = red - (red * fadeLevel);
-    int fadedGreen = green - (green * fadeLevel);
-    int fadedBlue = blue - (blue * fadeLevel);
+    fadedRed = getRed(color);
+    fadedRed = fadedRed - (fadedRed * fadeLevel);
+
+    fadedGreen = getGreen(color);
+    fadedGreen = fadedGreen - (fadedGreen * fadeLevel);
+
+    fadedBlue = getBlue(color);
+    fadedBlue = fadedBlue - (fadedBlue * fadeLevel);
 
     return strip.Color(fadedRed, fadedGreen, fadedBlue, 0);
 }
 
-uint32_t PixelRing::getNextRainbowColor(bool faded, int fadeLevel)
+// Input a value 0 to 255 to get a color value.
+// The colours are a transition r - g - b - back to r.
+uint32_t Wheel(byte WheelPos)
 {
+    WheelPos = 255 - WheelPos;
+    if (WheelPos < 85)
+    {
+        return strip.Color(255 - WheelPos * 3, 0, WheelPos * 3, 0);
+    }
+    if (WheelPos < 170)
+    {
+        WheelPos -= 85;
+        return strip.Color(0, WheelPos * 3, 255 - WheelPos * 3, 0);
+    }
+    WheelPos -= 170;
+    return strip.Color(WheelPos * 3, 255 - WheelPos * 3, 0, 0);
 }
 
 uint32_t PixelRing::getNextRainbowColor()
 {
-
-    switch (fadeTo)
-    {
-    //Fading to Yellow
-    case 0:
-        if (green < 255)
-        {
-            green++;
-            return strip.Color(red, green, blue, 0);
-        }
-        else
-        {
-            fadeTo = 1;
-            return strip.Color(red, green, blue, 0);
-        }
-        break;
-    //Fading to Green
-    case 1:
-        if (red > 0)
-        {
-            red--;
-            return strip.Color(red, green, blue, 0);
-        }
-        else
-        {
-            fadeTo = 2;
-            return strip.Color(red, green, blue, 0);
-        }
-        break;
-    //Fading To Cyan
-    case 2:
-        if (blue < 255)
-        {
-            blue++;
-            return strip.Color(red, green, blue, 0);
-        }
-        else
-        {
-            fadeTo = 3;
-            return strip.Color(red, green, blue, 0);
-        }
-        break;
-    //Fade to Blue
-    case 3:
-        if (green > 0)
-        {
-            green--;
-            return strip.Color(red, green, blue, 0);
-        }
-        else
-        {
-            fadeTo = 4;
-            return strip.Color(red, green, blue, 0);
-        }
-        break;
-    //Fade To Magenta
-    case 4:
-        if (red < 255)
-        {
-            red++;
-            return strip.Color(red, green, blue, 0);
-        }
-        else
-        {
-            fadeTo = 5;
-            return strip.Color(red, green, blue, 0);
-        }
-        break;
-    //Fade Back to Red
-    case 5:
-        if (blue > 0)
-        {
-            blue--;
-            return strip.Color(red, green, blue, 0);
-        }
-        else
-        {
-            fadeTo = 0;
-            return strip.Color(red, green, blue, 0);
-        }
-        break;
-    }
+    colorState++;
+    return Wheel(colorState);
 }
 
 void PixelRing::update()
